@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.40.0](https://github.com/agentclientprotocol/claude-agent-acp/compare/v0.39.0...v0.40.0) (2026-05-29)
+
+
+### Features
+
+* **deps-dev:** bump the minor group with 2 updates ([#726](https://github.com/agentclientprotocol/claude-agent-acp/issues/726)) ([51a370e](https://github.com/agentclientprotocol/claude-agent-acp/commit/51a370e4feb8a74279698b156e35b96631a74d74))
+
 ## [0.39.0](https://github.com/agentclientprotocol/claude-agent-acp/compare/v0.38.0...v0.39.0) (2026-05-29)
 
 
