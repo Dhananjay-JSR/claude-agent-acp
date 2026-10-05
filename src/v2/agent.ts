@@ -37,6 +37,8 @@ import { V2Terminals } from "./terminal.js";
  * As in `v1AgentApp`, the agent of the connection is created when the
  * connection opens, before the connection processes any inbound message.
  * `onAgent` receives it for the owner of the process (shutdown).
+ *
+ * The provider methods pass through: their types are the same in v1 and v2.
  */
 export function v2AgentApp(
   logger: Logger | undefined,
@@ -56,6 +58,13 @@ export function v2AgentApp(
     )
     .onRequest(v2.methods.agent.auth.login, ({ params }) => agent.authenticate(params))
     .onRequest(v2.methods.agent.auth.logout, ({ params }) => agent.logout(params))
+    .onRequest(v2.methods.agent.providers.list, ({ params }) =>
+      agent.unstable_listProviders(params),
+    )
+    .onRequest(v2.methods.agent.providers.set, ({ params }) => agent.unstable_setProvider(params))
+    .onRequest(v2.methods.agent.providers.disable, ({ params }) =>
+      agent.unstable_disableProvider(params),
+    )
     .onRequest(v2.methods.agent.session.new, async ({ params }) =>
       v2NewSessionResponse(await agent.newSession(v1NewSessionRequest(params))),
     )
