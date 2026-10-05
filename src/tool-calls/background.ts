@@ -20,15 +20,21 @@ import { AIR_ASYNC_TASKS_CAPABILITY, withAirMeta } from "../air-extension.js";
  * Hence the AIR namespace rather than `claudeCode`: to a client without the
  * `asyncTasks` capability, which is never sent that lifecycle, the marker would
  * promise a card state it has no way to ever resolve.
+ *
+ * The marker is for AIR only, as the namespace says. Another client that takes
+ * async tasks reads the same fact from the `toolCallId` of the task itself, and
+ * must not be sent an AIR key.
  */
 export function backgroundedBashToolCall(
   notification: SessionNotification,
   backgroundedToolCallIds: ReadonlySet<string>,
   asyncTasksSupported: boolean,
+  airClient: boolean,
 ): SessionNotification {
   const update = notification.update;
   if (
     !asyncTasksSupported ||
+    !airClient ||
     update.sessionUpdate !== "tool_call_update" ||
     !backgroundedToolCallIds.has(update.toolCallId)
   ) {

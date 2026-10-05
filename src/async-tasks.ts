@@ -102,7 +102,28 @@ type BackgroundTaskLevel = TaskIdentity & {
   description?: unknown;
 };
 
+/** The `_meta` capability a client that is not AIR declares to take async tasks. */
+const ASYNC_TASKS_CAPABILITY = "asyncTasks";
+
+/**
+ * Whether the client takes the async task lifecycle.
+ *
+ * A client declares it under `clientCapabilities._meta`, which is where ACP
+ * puts a capability the schema does not define and which released SDKs
+ * preserve. The AIR capability keeps working; what it must not stay is the
+ * *only* way in, because declaring `_meta.jetbrains.air` at all opts a client
+ * into the AIR tool call contract — a much larger contract than showing what
+ * runs in the background.
+ */
 export function clientSupportsAsyncTasks(capabilities?: ClientCapabilities | null): boolean {
+  const declared = capabilities?._meta?.[ASYNC_TASKS_CAPABILITY];
+  if (
+    declared === true ||
+    (typeof declared === "object" && declared !== null && !Array.isArray(declared))
+  ) {
+    return true;
+  }
+
   return clientSupportsAirCapability(capabilities, AIR_ASYNC_TASKS_CAPABILITY);
 }
 

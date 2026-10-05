@@ -6990,6 +6990,7 @@ export class ClaudeAcpAgent {
                   acceptedPlanToolResult(notification, acceptedPlanToolUseId),
                   backgroundedToolCalls,
                   asyncTasks.enabled,
+                  this.toolCallCapabilities.air.client,
                 ),
               );
             }

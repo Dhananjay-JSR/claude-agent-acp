@@ -589,6 +589,15 @@ describe("AsyncTaskRuntime", () => {
     expect(clientSupportsAsyncTasks({})).toBe(false);
   });
 
+  it("detects the capability of a client that is not AIR", () => {
+    expect(clientSupportsAsyncTasks({ _meta: { asyncTasks: {} } })).toBe(true);
+    expect(clientSupportsAsyncTasks({ _meta: { asyncTasks: true } })).toBe(true);
+    expect(clientSupportsAsyncTasks({ _meta: { asyncTasks: false } })).toBe(false);
+    expect(clientSupportsAsyncTasks({ _meta: { asyncTasks: null } })).toBe(false);
+    expect(clientSupportsAsyncTasks({ _meta: { asyncTasks: [] } })).toBe(false);
+    expect(clientSupportsAsyncTasks({ _meta: {} })).toBe(false);
+  });
+
   it("publishes one durable lifecycle with progress and a terminal state", async () => {
     const published: AcpSessionNotification[] = [];
     const runtime = new AsyncTaskRuntime(true, "session", async (notification) => {

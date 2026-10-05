@@ -872,6 +872,12 @@ The adapter also ignores a `local_monitor` task.
 A task that a subagent tool call started goes to the subagent session.
 Its spawn, progress and state updates go there also after the subagent finished.
 
+- A client that is not AIR declares `asyncTasks` in `clientCapabilities._meta`, as `{}` or `true`.
+  Declaring `_meta.jetbrains.air` at all opts a client into the AIR tool call contract, which is a much larger contract than taking background work.
+- AIR can instead declare `asyncTasks` in `_meta.jetbrains.air.capabilities`.
+- Either signal enables async tasks.
+- Only an AIR client gets `_meta.jetbrains.air.asyncTasks.backgrounded` on the Bash card. Every other client reads the same fact from the `toolCallId` the task carries.
+
 ### Updates
 
 - `async_task_spawned` has `asyncTaskId`, `name`, `taskType`, `description`, `showInTranscript`, `canStop: true`, and optional `outputFilePath` and `toolCallId`.
@@ -879,9 +885,10 @@ Its spawn, progress and state updates go there also after the subagent finished.
   `showInTranscript` is `false` when the SDK asks to skip the transcript.
 - `async_task_progress` carries only the changed fields: `description`, `summary`, `lastToolName`, `usage`, `outputFilePath`, and `toolCallId`.
 - `async_task_state_update` carries `state` (`running`, `paused`, `completed`, `failed`, or `stopped`) and an optional `summary`.
-- The Bash `tool_call_update` of a backgrounded command carries `_meta.jetbrains.air.asyncTasks.backgrounded: true`.
+- For an AIR client, the Bash `tool_call_update` of a backgrounded command carries `_meta.jetbrains.air.asyncTasks.backgrounded: true`.
   The card then shows backgrounded work instead of finished work.
   Only structured data sets the marker: the `backgroundTaskId` of the tool result, a known background task of the tool call, or a `run_in_background` input.
+  Another client reads the same fact from the `toolCallId` of `async_task_spawned`.
 
 ### Task id and output path
 

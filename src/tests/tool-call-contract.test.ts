@@ -696,7 +696,7 @@ describe("background Bash", () => {
   };
 
   it("marks the tool call of a command that became an async task", () => {
-    expect(backgroundedBashToolCall(completed, new Set(["t"]), true)).toEqual({
+    expect(backgroundedBashToolCall(completed, new Set(["t"]), true, true)).toEqual({
       ...completed,
       update: {
         ...completed.update,
@@ -706,10 +706,14 @@ describe("background Bash", () => {
   });
 
   it("marks only a tool call that went to the background", () => {
-    expect(backgroundedBashToolCall(completed, new Set(["other"]), true)).toBe(completed);
+    expect(backgroundedBashToolCall(completed, new Set(["other"]), true, true)).toBe(completed);
   });
 
   it("sends no marker to a client without the asyncTasks capability", () => {
-    expect(backgroundedBashToolCall(completed, new Set(["t"]), false)).toBe(completed);
+    expect(backgroundedBashToolCall(completed, new Set(["t"]), false, true)).toBe(completed);
+  });
+
+  it("sends no AIR marker to a client that is not AIR", () => {
+    expect(backgroundedBashToolCall(completed, new Set(["t"]), true, false)).toBe(completed);
   });
 });
